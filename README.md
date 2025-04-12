@@ -1,8 +1,8 @@
 # PIXELER
 Photo to pixel art converter
 
-![Sample1](img\sample\img_sample10.png)
-![Sample1](img\sample\img_sample20.png)
+![Sample1](img/sample/img_sample10.png)
+![Sample1](img/sample/img_sample20.png)
 ---
 
 ## Functions
@@ -19,9 +19,9 @@ Photo to pixel art converter
 ## Sample images
 
 
-![Sample1](img\sample\img_sample30.png)
-![Sample1](img\sample\img_sample31.png)
-![Sample1](img\sample\img_sample32.png)
+![Sample1](img/sample/img_sample30.png)
+![Sample1](img/sample/img_sample31.png)
+![Sample1](img/sample/img_sample32.png)
 
 ---
 
