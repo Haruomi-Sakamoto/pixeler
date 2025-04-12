@@ -25,7 +25,7 @@ Photo to pixel art converter
 
 ---
 
-### 1. Clone & Run
+## Clone & Run
 
 ```bash
 git clone https://github.com/yourname/pixel-art-converter.git
