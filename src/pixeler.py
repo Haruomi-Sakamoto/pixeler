@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog, colorchooser, messagebox
+from tkinter import filedialog, colorchooser
 from PIL import Image, ImageTk
 import numpy as np
 import json
@@ -41,9 +41,6 @@ class PixelArtApp:
         self.btn_reload = tk.Button(self.button_frame, text="Reload Image", command=self.reload_image, state=tk.DISABLED)
         self.btn_reload.pack(side=tk.LEFT)
 
-        self.color_frame = tk.Frame(root)
-        self.color_frame.pack(fill=tk.X, padx=10, pady=5)
-
         self.pixel_slider_label = tk.Label(self.button_frame, text="Pixel Size")
         self.pixel_slider_label.pack(side=tk.LEFT)
         self.pixel_slider = tk.Scale(
@@ -54,6 +51,9 @@ class PixelArtApp:
         )
         self.pixel_slider.set(config.PIXEL_SIZE_DEFAULT)
         self.pixel_slider.pack(side=tk.LEFT)
+
+        self.color_frame = tk.Frame(root)
+        self.color_frame.pack(fill=tk.X, padx=10, pady=5)
 
         self.canvas = tk.Canvas(root, bg="white")
         self.canvas.pack(fill=tk.BOTH, expand=True)
@@ -108,14 +108,22 @@ class PixelArtApp:
             color_label.pack(side=tk.LEFT, padx=2, pady=2)
 
     def save_palette(self):
-        file_path = filedialog.asksaveasfilename(
-            defaultextension=".json",
-            filetypes=[("JSON Files", "*.json")]
-        )
-        if file_path:
-            with open(file_path, "w") as f:
-                json.dump(self.palette, f)
-            messagebox.showinfo("Save Complete", f"Palette saved as: {os.path.basename(file_path)}")
+        os.makedirs("palette", exist_ok=True)
+        existing_files = [f for f in os.listdir("palette") if f.startswith("palette") and f.endswith(".json")]
+        numbers = []
+        for f in existing_files:
+            try:
+                num = int(f[7:-5])
+                numbers.append(num)
+            except ValueError:
+                continue
+        next_number = max(numbers) + 1 if numbers else 1
+
+        filename = f"palette{next_number}.json"
+        file_path = os.path.join("palette", filename)
+
+        with open(file_path, "w") as f:
+            json.dump(self.palette, f)
 
     def load_palette(self):
         file_path = filedialog.askopenfilename(
@@ -125,7 +133,6 @@ class PixelArtApp:
             with open(file_path, "r") as f:
                 self.palette = json.load(f)
             self.update_palette_display()
-            messagebox.showinfo("Load Complete", f"Palette loaded from: {os.path.basename(file_path)}")
 
     def load_palette_from_default(self):
         if os.path.exists(config.DEFAULT_PALETTE_FILE):
@@ -173,13 +180,20 @@ class PixelArtApp:
 
     def save_image(self):
         if self.processed_image:
-            file_path = filedialog.asksaveasfilename(
-                defaultextension=".png",
-                filetypes=[("PNG Files", "*.png"), ("JPEG Files", "*.jpg"), ("BMP Files", "*.bmp")]
-            )
-            if file_path:
-                self.processed_image.save(file_path)
-                messagebox.showinfo("Save Complete", f"Image saved as: {os.path.basename(file_path)}")
+            os.makedirs("img", exist_ok=True)
+            existing_files = [f for f in os.listdir("img") if f.startswith("img") and f.endswith(".png")]
+            numbers = []
+            for f in existing_files:
+                try:
+                    num = int(f[3:-4])
+                    numbers.append(num)
+                except ValueError:
+                    continue
+            next_number = max(numbers) + 1 if numbers else 1
+
+            filename = f"img{next_number}.png"
+            file_path = os.path.join("img", filename)
+            self.processed_image.save(file_path)
 
     def rgb_to_hex(self, rgb):
         return f'#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}'
