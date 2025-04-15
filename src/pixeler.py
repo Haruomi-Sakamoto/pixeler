@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import filedialog, colorchooser
+from tkinter import filedialog, colorchooser, messagebox
 from PIL import Image, ImageTk
 import numpy as np
 import json
 import os
+import pyautogui
 
 import config
 
@@ -25,6 +26,9 @@ class PixelArtApp:
 
         self.btn_add_color = tk.Button(self.button_frame, text="Add Color", command=self.add_color)
         self.btn_add_color.pack(side=tk.LEFT)
+
+        self.btn_pick_color = tk.Button(self.button_frame, text="Pick Color", command=self.pick_color_from_screen)
+        self.btn_pick_color.pack(side=tk.LEFT)
 
         self.btn_clear_palette = tk.Button(self.button_frame, text="Clear Palette", command=self.clear_palette)
         self.btn_clear_palette.pack(side=tk.LEFT)
@@ -81,6 +85,19 @@ class PixelArtApp:
             if color_tuple not in self.palette:
                 self.palette.append(color_tuple)
                 self.update_palette_display()
+
+    def pick_color_from_screen(self):
+        messagebox.showinfo("Eyedropper", "move mouse to desired position, get color after 3 seconds.")
+        self.root.withdraw()
+        self.root.after(3000, self._get_color_under_mouse)
+
+    def _get_color_under_mouse(self):
+        x, y = pyautogui.position()
+        pixel = pyautogui.screenshot().getpixel((x, y))
+        self.root.deiconify()
+        if pixel not in self.palette:
+            self.palette.append(pixel)
+            self.update_palette_display()
 
     def clear_palette(self):
         self.palette = []
