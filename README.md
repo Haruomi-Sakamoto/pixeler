@@ -31,4 +31,4 @@ Photo to pixel art converter
 git clone https://github.com/yourname/pixel-art-converter.git
 cd pixel-art-converter
 pip install -r requirements.txt
-python pixel_art_converter.py
+python pixeler.py
